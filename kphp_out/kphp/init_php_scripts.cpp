@@ -1,8 +1,10 @@
-//crc64:719c9e8f7d05890a
+//crc64:531575bda31c00c7
 //crc64_with_comments:0000000000000000
 #include "runtime-headers.h"
 #include "server/php-init-scripts.h"
 #include "o_64/src_main594cc12a67f6b74d.h"
+#include "runtime/ffi.h"
+#include "dlfcn.h"
 
 void global_init_php_scripts() noexcept ;
 void init_php_scripts() noexcept ;
@@ -20,6 +22,11 @@ char **get_runtime_options(int *count) noexcept {
 
 void global_init_php_scripts()  noexcept {
   const_vars_init();
+  ffi_env_instance = FFIEnv{1, 1};
+  ffi_env_instance.funcs.dlopen = dlopen;
+  ffi_env_instance.funcs.dlsym = dlsym;
+  ffi_env_instance.libs[0].path = "libc.so.6";
+  ffi_env_instance.symbols[0].name = "printf";
 }
 
 void f$src_main594cc12a67f6b74d$run()  noexcept {
